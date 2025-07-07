@@ -1,4 +1,12 @@
 # Installed Apps
+# Fork corrigé de installed_apps
+
+Ce fork corrige les erreurs de null safety dans le package original.
+
+## Corrections apportées :
+- Fix des erreurs Kotlin nullable dans BuiltWithUtil.kt
+- Fix des erreurs Kotlin nullable dans Util.kt
+- Compatibilité avec les versions récentes de Kotlin
 
 The **Installed Apps** plugin for Flutter provides utility methods related to installed apps on a
 device.
