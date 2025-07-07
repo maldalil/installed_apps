@@ -9,7 +9,8 @@ import java.io.ByteArrayOutputStream
 class DrawableUtil {
 
     companion object {
-        fun drawableToByteArray(drawable: Drawable): ByteArray {
+        fun drawableToByteArray(drawable: Drawable?): ByteArray {
+            if (drawable == null) return ByteArray(0)
             val bitmap = drawableToBitmap(drawable)
             ByteArrayOutputStream().use { stream ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)

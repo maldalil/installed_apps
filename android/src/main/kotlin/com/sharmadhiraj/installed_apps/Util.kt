@@ -14,20 +14,31 @@ class Util {
 
         fun convertAppToMap(
             packageManager: PackageManager,
-            app: ApplicationInfo,
+            app: ApplicationInfo?,
             withIcon: Boolean
         ): HashMap<String, Any?> {
             val map = HashMap<String, Any?>()
-            map["name"] = packageManager.getApplicationLabel(app)
-            map["package_name"] = app.packageName
-            map["icon"] =
-                if (withIcon) DrawableUtil.drawableToByteArray(app.loadIcon(packageManager))
-                else ByteArray(0)
-            val packageInfo = packageManager.getPackageInfo(app.packageName, 0)
-            map["version_name"] = packageInfo.versionName
-            map["version_code"] = getVersionCode(packageInfo)
-            map["built_with"] = BuiltWithUtil.getPlatform(packageInfo.applicationInfo)
-            map["installed_timestamp"] = File(packageInfo.applicationInfo.sourceDir).lastModified()
+            
+            app?.let { safeApp ->
+                map["name"] = packageManager.getApplicationLabel(safeApp)
+                map["package_name"] = safeApp.packageName
+                map["icon"] = if (withIcon) DrawableUtil.drawableToByteArray(safeApp.loadIcon(packageManager)) else ByteArray(0)
+                
+                try {
+                    val packageInfo = packageManager.getPackageInfo(safeApp.packageName, 0)
+                    map["version_name"] = packageInfo.versionName
+                    map["version_code"] = getVersionCode(packageInfo)
+                    map["built_with"] = BuiltWithUtil.getPlatform(packageInfo.applicationInfo)
+                    map["installed_timestamp"] = File(packageInfo.applicationInfo.sourceDir).lastModified()
+                } catch (e: PackageManager.NameNotFoundException) {
+                    // Gérer l'erreur si le package n'existe pas
+                    map["version_name"] = null
+                    map["version_code"] = null
+                    map["built_with"] = null
+                    map["installed_timestamp"] = null
+                }
+            }
+            
             return map
         }
 
