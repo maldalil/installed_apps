@@ -8,7 +8,12 @@ import java.util.zip.ZipFile
 class BuiltWithUtil {
     companion object {
         fun getPlatform(applicationInfo: ApplicationInfo?): String {
-            val sourceDir = applicationInfo?.sourceDir
+            // Vérification sécurisée de applicationInfo et sourceDir
+            if (applicationInfo == null) {
+                return "native_or_others"
+            }
+            
+            val sourceDir = applicationInfo.sourceDir
             if (sourceDir == null) {
                 return "native_or_others"
             }
@@ -52,7 +57,13 @@ class BuiltWithUtil {
         }
         
         fun getAppNameFromPackage(context: Context, packageInfo: PackageInfo): String {
-            return packageInfo.applicationInfo?.loadLabel(context.packageManager)?.toString() ?: "Unknown"
+            // Ligne 57 corrigée - vérification sécurisée
+            val appInfo = packageInfo.applicationInfo
+            return if (appInfo != null) {
+                appInfo.loadLabel(context.packageManager)?.toString() ?: "Unknown"
+            } else {
+                "Unknown"
+            }
         }
     }
 }

@@ -28,9 +28,18 @@ class Util {
                     map["version_code"] = getVersionCode(packageInfo)
                     map["built_with"] = BuiltWithUtil.getPlatform(packageInfo.applicationInfo)
                     
-                    // Correction pour la ligne 32 - gestion sécurisée de applicationInfo et sourceDir
-                    val sourceDir = packageInfo.applicationInfo?.sourceDir
-                    map["installed_timestamp"] = sourceDir?.let { File(it).lastModified() } ?: 0L
+                    // Ligne 32 corrigée - gestion ultra-sécurisée
+                    val appInfo = packageInfo.applicationInfo
+                    if (appInfo != null) {
+                        val sourceDir = appInfo.sourceDir
+                        map["installed_timestamp"] = if (sourceDir != null) {
+                            File(sourceDir).lastModified()
+                        } else {
+                            0L
+                        }
+                    } else {
+                        map["installed_timestamp"] = 0L
+                    }
                     
                 } catch (e: PackageManager.NameNotFoundException) {
                     // Gérer l'erreur si le package n'existe pas
