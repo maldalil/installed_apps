@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import java.io.ByteArrayOutputStream
 
 class DrawableUtil {
-
     companion object {
         fun drawableToByteArray(drawable: Drawable?): ByteArray {
             if (drawable == null) return ByteArray(0)
@@ -17,7 +16,7 @@ class DrawableUtil {
                 return stream.toByteArray()
             }
         }
-
+        
         private fun drawableToBitmap(drawable: Drawable): Bitmap {
             if (drawable is BitmapDrawable) {
                 return drawable.bitmap

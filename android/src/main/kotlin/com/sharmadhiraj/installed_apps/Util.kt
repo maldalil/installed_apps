@@ -27,9 +27,11 @@ class Util {
                     map["version_name"] = packageInfo.versionName
                     map["version_code"] = getVersionCode(packageInfo)
                     map["built_with"] = BuiltWithUtil.getPlatform(packageInfo.applicationInfo)
-                    map["installed_timestamp"] = packageInfo.applicationInfo?.sourceDir?.let { 
-                        File(it).lastModified() 
-                    } ?: 0L
+                    
+                    // Correction pour la ligne 32 - gestion sécurisée de applicationInfo et sourceDir
+                    val sourceDir = packageInfo.applicationInfo?.sourceDir
+                    map["installed_timestamp"] = sourceDir?.let { File(it).lastModified() } ?: 0L
+                    
                 } catch (e: PackageManager.NameNotFoundException) {
                     // Gérer l'erreur si le package n'existe pas
                     map["version_name"] = null

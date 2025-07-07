@@ -8,13 +8,13 @@ import java.util.zip.ZipFile
 class BuiltWithUtil {
     companion object {
         fun getPlatform(applicationInfo: ApplicationInfo?): String {
-            if (applicationInfo?.sourceDir == null) {
+            val sourceDir = applicationInfo?.sourceDir
+            if (sourceDir == null) {
                 return "native_or_others"
             }
             
             return try {
-                val apkPath = applicationInfo.sourceDir
-                val zipFile = ZipFile(apkPath)
+                val zipFile = ZipFile(sourceDir)
                 val entries = zipFile.entries().toList().map { it.name }
                 
                 when {
