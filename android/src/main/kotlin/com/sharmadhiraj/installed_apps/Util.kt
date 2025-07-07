@@ -9,9 +9,7 @@ import android.os.Build.VERSION_CODES.P
 import java.io.File
 
 class Util {
-
     companion object {
-
         fun convertAppToMap(
             packageManager: PackageManager,
             app: ApplicationInfo?,
@@ -29,7 +27,9 @@ class Util {
                     map["version_name"] = packageInfo.versionName
                     map["version_code"] = getVersionCode(packageInfo)
                     map["built_with"] = BuiltWithUtil.getPlatform(packageInfo.applicationInfo)
-                    map["installed_timestamp"] = File(packageInfo.applicationInfo.sourceDir).lastModified()
+                    map["installed_timestamp"] = packageInfo.applicationInfo?.sourceDir?.let { 
+                        File(it).lastModified() 
+                    } ?: 0L
                 } catch (e: PackageManager.NameNotFoundException) {
                     // Gérer l'erreur si le package n'existe pas
                     map["version_name"] = null
@@ -41,18 +41,15 @@ class Util {
             
             return map
         }
-
-
+        
         fun getPackageManager(context: Context): PackageManager {
             return context.packageManager
         }
-
+        
         @Suppress("DEPRECATION")
         private fun getVersionCode(packageInfo: PackageInfo): Long {
             return if (SDK_INT < P) packageInfo.versionCode.toLong()
             else packageInfo.longVersionCode
         }
-
     }
-
 }
